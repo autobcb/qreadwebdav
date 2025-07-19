@@ -1,0 +1,6 @@
+github.com/nahid/gohttp v0.0.1 h1:Z9PjfMn3IQW381YKxz/hj1ehXFtq2qe1yg1XwB9tXE0=
+github.com/nahid/gohttp v0.0.1/go.mod h1:8WCiFXImqNqoBV1xPUFMwTmO9ZWrF6UsILmQjhW7ETU=
+golang.org/x/net v0.42.0 h1:jzkYrhi3YQWD6MLBJcsklgQsoAcw89EcZbJw8Z614hs=
+golang.org/x/net v0.42.0/go.mod h1:FF1RA5d3u7nAYA4z2TkclSCKh68eSXtiFwcWQpPXdt8=
+gopkg.in/ini.v1 v1.67.0 h1:Dgnx+6+nfE+IfzjUEISNeydPJh9AXNNsWbGP9KzCsOA=
+gopkg.in/ini.v1 v1.67.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
