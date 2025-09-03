@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/nahid/gohttp"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -45,7 +46,7 @@ func ChcekProgress(method, path, username, password string) {
 					durChapterPos = d3
 				}
 
-				books, err := Getbooks(accessToken, 0)
+				books, err := Getbooks(accessToken, name, 0)
 				if err != nil && err.Error() == "NEED_LOGIN" {
 					delaccessToken(username)
 					ChcekProgress(method, path, username, password)
@@ -103,7 +104,7 @@ func ChcekProgress(method, path, username, password string) {
 					durChapterIndex = d1
 				}
 
-				books, err := Getbooks(accessToken, 0)
+				books, err := Getbooks(accessToken, name, 0)
 				if err != nil && err.Error() == "NEED_LOGIN" {
 					delaccessToken(username)
 					ChcekProgress(method, path, username, password)
@@ -156,20 +157,20 @@ func writetxt(path, txt string) {
 	}
 }
 
-func Getbooks(accessToken string, time int) (list []interface{}, err error) {
+func Getbooks(accessToken string, name string, time int) (list []interface{}, err error) {
 	defer func() {
 		if nerr := recover(); nerr != nil {
 			err = fmt.Errorf("%v", nerr)
 		}
 	}()
-	var url = config.Url + "/api/5/getBookshelf?accessToken=" + accessToken
+	var url = config.Url + "/api/5/getBookshelf?accessToken=" + accessToken + "&name=" + url.QueryEscape(name)
 	req := gohttp.NewRequest()
 
 	resp, err := req.
 		Get(url)
 	if err != nil {
 		if time < 5 {
-			return Getbooks(accessToken, time+1)
+			return Getbooks(accessToken, name, time+1)
 		}
 	}
 	if resp.GetStatusCode() == 200 {
@@ -178,14 +179,14 @@ func Getbooks(accessToken string, time int) (list []interface{}, err error) {
 			if time > 5 {
 				return []interface{}{}, err
 			}
-			return Getbooks(accessToken, time+1)
+			return Getbooks(accessToken, name, time+1)
 		}
 		data, err := mjson.ParseHasErr(body)
 		if err != nil {
 			if time > 5 {
 				return []interface{}{}, err
 			}
-			return Getbooks(accessToken, time+1)
+			return Getbooks(accessToken, name, time+1)
 		}
 		if strings.Contains(strkit.ToString(data["errorMsg"]), "NEED_LOGIN") {
 			return []interface{}{}, errors.New("NEED_LOGIN")
@@ -197,7 +198,7 @@ func Getbooks(accessToken string, time int) (list []interface{}, err error) {
 	if time > 5 {
 		return []interface{}{}, errors.New("请求失败")
 	}
-	return Getbooks(accessToken, time+1)
+	return Getbooks(accessToken, name, time+1)
 }
 
 func saveBookProgress(accessToken, url, title, index string, time int) {
